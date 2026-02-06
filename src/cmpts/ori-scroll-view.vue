@@ -44,7 +44,7 @@
   /**
    * 特效强化需要在 "renderer": "skyline"的情况下
   */
-import { loading } from './loading.vue';
+import loading from './loading.vue';
 const app = getApp();
 const baseOption = {
     components: { loading },
@@ -184,7 +184,7 @@ const baseOption = {
   export default baseOption
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" >
   .scroll_box {
     box-sizing: border-box;
   }

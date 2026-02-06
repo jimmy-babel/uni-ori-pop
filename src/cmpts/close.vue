@@ -40,7 +40,7 @@
     }
     export default pageOption;
 </script>
-<style lang='scss' scoped>
+<style lang='scss' >
 .close-btn-box{
     padding: 10rpx;
     .close-btn {

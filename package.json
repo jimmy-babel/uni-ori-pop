@@ -1,29 +1,42 @@
 {
   "name": "uni-ori-popup",
-  "version": "1.0.1",
+  "version": "1.0.4",
   "description": "UniApp 通用弹窗组件",
-  "main": "dist/uni-ori-popup.umd.js", 
-  "module": "dist/uni-ori-popup.es.js", 
-  "keywords": ["uni-app", "popup", "component"],
+  "main": "dist/uni-ori-popup.umd.js",
+  "module": "dist/uni-ori-popup.es.js",
+  "keywords": [
+    "uni-app",
+    "popup",
+    "component"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "vite build"
   },
   "author": "JIMMY",
-  "files": ["dist", "src"],
+  "files": [
+    "dist",
+    "src"
+  ],
   "peerDependencies": {
-    "vue": "^3.4.0", 
     "@dcloudio/uni-app": "3.0.0-4030620241128001",
     "@dcloudio/uni-components": "3.0.0-4030620241128001",
     "@dcloudio/uni-h5": "3.0.0-4030620241128001",
-    "@dcloudio/uni-mp-weixin": "3.0.0-4030620241128001"
+    "@dcloudio/uni-mp-weixin": "3.0.0-4030620241128001",
+    "vue": "^3.4.0"
   },
-  "devDependencies": {           
-    "vite": "5.2.8", 
+  "devDependencies": {
+    "@dcloudio/types": "^3.4.8",
     "@vitejs/plugin-vue": "^5.0.0",
-    "sass": "^1.82.0", 
-    "sass-loader": "^16.0.4", 
-    "@dcloudio/types": "^3.4.8"
+    "less": "^4.2.0",
+    "less-loader": "^12.2.0",
+    "sass": "^1.82.0",
+    "sass-loader": "^16.0.4",
+    "vite": "5.2.8",
+    "vite-plugin-css-injected-by-js": "^3.5.2"
   },
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "vue": "^3.4.0"
+  }
 }

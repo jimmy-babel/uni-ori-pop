@@ -1,7 +1,7 @@
 <template>
-  <view class="ori-popup" :class="placement + '-popup'" v-if="showPopup" :style="'--popup-offset:' + offset + 'rpx;'">
-    <view class="mask bg-color-mask" :animation="maskAnimate" @click="clickMask(true)"></view>
-    <view class="popup" :class="{ 'popup-bg-color': !customBg }" :style="customPopupStyle" :animation="popupAnimate">
+  <view class="ori-popup" :class="placement + '-popup'" v-if="showPopup" :style="'--popup-offset:' + offset + 'px;'">
+    <view class="mask bg-color-mask" :style="myCustomMaskStyle" :animation="maskAnimate" @click="clickMask(true)"></view>
+    <view class="popup" :class="{ 'popup-bg-color': !customBg }" :style="myCustomPopupStyle" :animation="popupAnimate">
       <view v-if="isShowTitle" class="popup-title flex-b-c f-shrink-0">
         <view class="flex1 bold p-20">
           <slot name="title"></slot>
@@ -99,6 +99,8 @@ const pageOption = {
       popupAnimate: {},
       showPopup: false,
       duration: 200,
+      myCustomMaskStyle: 'opacity: 0;',
+      myCustomPopupStyle: 'opacity: 0;transform: translate(-50%, -50%) scale(0.5);',
     }
   },
   watch:{
@@ -112,17 +114,17 @@ const pageOption = {
     }
   },
   methods: {
-    initData(){
+    initData() {
       this.maskAnimation = uni.createAnimation({
-          transformOrigin: "50% 50%",
-          duration: this.duration,
-          timingFunction: 'ease',
-      })
+        transformOrigin: "50% 50%",
+        duration: this.duration,
+        timingFunction: this.timing
+      });
       this.popupAnimation = uni.createAnimation({
-          transformOrigin: "50% 50%",
-          duration: this.duration,
-          timingFunction: 'ease',
-      })
+        transformOrigin: "50% 50%",
+        duration: this.duration,
+        timingFunction: this.timing
+      });
       this.initAnimate();
     },
     initAnimate(){
@@ -134,23 +136,53 @@ const pageOption = {
         this.popupAnimate = this.popupAnimation?.export();
       }
     },
-    setPopAnimate(isShow){
+    setPopAnimate(isShow) {
       let placement = this.placement;
-      console.log('setPopAnimate',placement,isShow);
+      // console.log('setPopAnimate', placement, isShow);
       let value = isShow ? '0' : '110%';
-      switch(placement){
+       if(!isShow){
+          this.myCustomMaskStyle = 'opacity: 0;';
+        }else{
+          this.myCustomMaskStyle = 'opacity: 1;';
+        }
+      switch(placement) {
         case "left":
           value = (isShow ? '' : '-') + value;
+          if(isShow){
+            this.myCustomPopupStyle = `opacity: 1;transform: translateX(${value});`;
+          }else{
+            this.myCustomPopupStyle = `opacity: 0;transform: translateX(${value});`;
+          }
+          break;
         case "right":
-          this.popupAnimation.translateX(value).step();
+          value = (isShow ? '' : '-') + value;
+          if(isShow){
+            this.myCustomPopupStyle = `opacity: 1;transform: translateX(${value});`;
+          }else{
+            this.myCustomPopupStyle = `opacity: 0;transform: translateX(${value});`;
+          }
           break;
         case "top":
           value = (isShow ? '' : '-') + value;
+          if(isShow){
+            this.myCustomPopupStyle = `opacity: 1;transform: translateY(${value});`;
+          }else{
+            this.myCustomPopupStyle = `opacity: 0;transform: translateY(${value});`;
+          }
+          break;
         case "bottom":
-          this.popupAnimation.translateY(value).step();
+          if(isShow){
+            this.myCustomPopupStyle = `opacity: 1;transform: translateY(${value});`;
+          }else{
+            this.myCustomPopupStyle = `opacity: 0;transform: translateY(${value});`;
+          }
           break;
         case "center":
-          this.popupAnimation.opacity(isShow ? 1 : 0).translate('-50%', '-50%').scale(isShow ? 1 : 0.5).step();
+          if(!isShow){
+            this.myCustomPopupStyle = 'opacity: 0;transform: translate(-50%, -50%) scale(0.5);';
+          }else{
+            this.myCustomPopupStyle = 'opacity: 1;transform: translate(-50%, -50%) scale(1);';
+          }
           break;
       }
     },
@@ -162,13 +194,13 @@ const pageOption = {
     },
     show() {
       this.showPopup = true;
-      this.initData();
+      // this.initData();
       this.$emit('update:modelValue', this.showPopup);
       this.$nextTick(()=>{
-        this.maskAnimate = this.maskAnimation.opacity(1).step().export();
+        // this.maskAnimate = this.maskAnimation.opacity(1).step().export();
         setTimeout(() => {
           this.setPopAnimate(true);
-          this.popupAnimate = this.popupAnimation.export();
+          // this.popupAnimate = this.popupAnimation.export();
         }, 50);
       })
     },
@@ -195,28 +227,34 @@ const pageOption = {
 export default pageOption
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="less">
+.testtest{
+  color: red;
+}
 .ori-popup{
   width: 100%;
   position: relative;
+  z-index: 9999;
   .mask{
     position: fixed;
     width: 100%;
     height: 100%;
     top: 0px;
     left: 0px;
-    z-index: 9999;
+    z-index: 1;
     background-color: rgba(0,0,0,0.4);
     opacity: 0;
+    transition: all 0.2s ease-in-out;
   }
   .popup{
     position: fixed;
     bottom: 0px;
     left: 0px;
-    z-index: 9999;
+    z-index: 2;
     display: flex;
     flex-direction: column;
     width: 100%;
+    transition: all 0.2s ease-in-out;
   }
   .popup-bg-color{
     background-color: #fff;
@@ -238,12 +276,12 @@ export default pageOption
   }
   .popup-close{
     position: absolute;
-    top: 10rpx;
-    right: 10rpx;
+    top: 5px;
+    right: 5px;
     z-index: 2;
     background: #fff;
     border-radius: 50%;
-    padding: 6rpx;
+    padding: 3px;
   }
   .content-loading{
     position: absolute;
@@ -264,8 +302,8 @@ export default pageOption
     left: var(--popup-offset);
     bottom: auto;
     right: auto;
-    border-top-right-radius: 12rpx;
-    border-bottom-right-radius: 12rpx;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
   }
 }
 .right-popup{
@@ -276,8 +314,8 @@ export default pageOption
     right: var(--popup-offset);
     bottom: auto;
     left: auto;
-    border-top-left-radius: 12rpx;
-    border-bottom-left-radius: 12rpx;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
   }
 }
 .top-popup{
@@ -289,8 +327,8 @@ export default pageOption
     left: 0px;
     bottom: auto;
     right: auto;
-    border-bottom-left-radius: 12rpx;
-    border-bottom-right-radius: 12rpx;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
   }
 }
 .bottom-popup{
@@ -302,8 +340,8 @@ export default pageOption
     left: 0px;
     bottom: var(--popup-offset);
     right: auto;
-    border-top-left-radius: 12rpx;
-    border-top-right-radius: 12rpx;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
   }
 }
 .center-popup{
@@ -322,7 +360,7 @@ export default pageOption
     transform: translate(-50%, -50%);
     bottom: auto;
     right: auto;
-    border-radius: 12rpx;
+    border-radius: 6px;
     opacity: 0;
   }
 }

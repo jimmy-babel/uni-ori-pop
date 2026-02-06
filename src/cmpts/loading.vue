@@ -26,7 +26,7 @@ const pageOption = {
 	export default pageOption;
 </script>
 
-<style scoped lang="scss">
+<style  lang="scss">
 	.loading,
 	.loading > view {
 	  position: relative;
